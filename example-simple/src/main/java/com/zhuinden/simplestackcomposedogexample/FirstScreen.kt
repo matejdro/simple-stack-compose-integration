@@ -1,6 +1,7 @@
 package com.zhuinden.simplestackcomposesimpleexample
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,11 +10,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.zhuinden.simplestack.Backstack
 import com.zhuinden.simplestack.ServiceBinder
+import com.zhuinden.simplestackcomposedogexample.CommonSharedService
 import com.zhuinden.simplestackcomposeintegration.services.rememberService
 import com.zhuinden.simplestackextensions.servicesktx.add
 import com.zhuinden.simplestackextensions.servicesktx.rebind
@@ -43,6 +47,10 @@ data class FirstKey(val title: String) : ComposeKey() {
 
             add(firstModel)
             rebind<FirstScreen.ActionHandler>(firstModel)
+
+            val commonSharedService = CommonSharedService()
+            add(commonSharedService)
+            rebind<CommonSharedService>(commonSharedService)
         }
     }
 }
@@ -57,12 +65,16 @@ class FirstScreen private constructor() {
         @SuppressLint("ComposableNaming")
         operator fun invoke(title: String, modifier: Modifier = Modifier) {
             val eventHandler = rememberService<ActionHandler>()
+            val commonSharedService = rememberService<CommonSharedService>()
+            val color = commonSharedService.color.collectAsState().value
 
             Column(
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize().background(color),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Text("Color service: $commonSharedService")
+
                 Button(onClick = {
                     // onClick is not a composition context, must get ambients above
                     eventHandler.navigateToSecond()

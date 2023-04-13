@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             val backstack = rememberBackstack(asyncStateChanger) {
                 createBackstack(
                     scopedServices = DefaultServiceProvider(),
-                    initialKeys = History.of(FirstKey())
+                    initialKeys = History.of(FirstKey(), SecondKey())
                 )
             }
 
