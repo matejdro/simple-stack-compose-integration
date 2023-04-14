@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.zhuinden.simplestack.ScopeKey
 import com.zhuinden.simplestack.ServiceBinder
 import com.zhuinden.simplestackcomposedogexample.CommonSharedService
 import com.zhuinden.simplestackcomposeintegration.services.rememberService
@@ -30,7 +31,7 @@ data object SecondKey: ComposeKey() {
 
     @Composable
     override fun ScreenComposable(modifier: Modifier) {
-        SecondScreen(modifier)
+        SecondScreen(this, modifier)
     }
 
     override fun bindServices(serviceBinder: ServiceBinder) {
@@ -48,10 +49,10 @@ data object SecondKey: ComposeKey() {
 }
 
 @Composable
-fun SecondScreen(modifier: Modifier = Modifier) {
+fun SecondScreen(scope: ScopeKey, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    val commonSharedService = rememberService<CommonSharedService>()
+    val commonSharedService = scope.rememberService<CommonSharedService>()
     val color = commonSharedService.color.collectAsState().value
 
     Column(
@@ -76,6 +77,6 @@ fun SecondScreen(modifier: Modifier = Modifier) {
 @Composable
 fun SecondScreenPreview() {
     MaterialTheme {
-        SecondScreen()
+        SecondScreen(ScopeKey { "" })
     }
 }

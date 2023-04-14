@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        println("Second screen: ${SecondKey.hashCode()}")
+
         onBackPressedDispatcher.addCallback(backPressedCallback)
 
         backstack = Navigator.configure()

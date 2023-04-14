@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.zhuinden.simplestack.Backstack
+import com.zhuinden.simplestack.ScopeKey
 import com.zhuinden.simplestack.ServiceBinder
 import com.zhuinden.simplestackcomposedogexample.CommonSharedService
 import com.zhuinden.simplestackcomposeintegration.services.rememberService
@@ -38,7 +39,7 @@ data class FirstKey(val title: String) : ComposeKey() {
 
     @Composable
     override fun ScreenComposable(modifier: Modifier) {
-        FirstScreen(title, modifier)
+        FirstScreen(this, title, modifier)
     }
 
     override fun bindServices(serviceBinder: ServiceBinder) {
@@ -63,9 +64,9 @@ class FirstScreen private constructor() {
     companion object {
         @Composable
         @SuppressLint("ComposableNaming")
-        operator fun invoke(title: String, modifier: Modifier = Modifier) {
-            val eventHandler = rememberService<ActionHandler>()
-            val commonSharedService = rememberService<CommonSharedService>()
+        operator fun invoke(scope: ScopeKey, title: String, modifier: Modifier = Modifier) {
+            val eventHandler = scope.rememberService<ActionHandler>()
+            val commonSharedService = scope.rememberService<CommonSharedService>()
             val color = commonSharedService.color.collectAsState().value
 
             Column(
@@ -90,6 +91,6 @@ class FirstScreen private constructor() {
 @Composable
 fun FirstScreenPreview() {
     MaterialTheme {
-        FirstScreen("This is a preview")
+        FirstScreen(ScopeKey { "" },"This is a preview")
     }
 }
